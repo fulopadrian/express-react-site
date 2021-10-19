@@ -1,18 +1,24 @@
 //jshint esversion: 6
 
 import React from "react";
-import Post from "./Post.js";
+import { getAllPosts } from "../services/PostServices";
+import Post from "./Post";
 
 function Home() {
   const [posts, setPosts] = React.useState();
 
   React.useEffect(function() {
-    fetch("/posts")
-    .then((res) => res.json())
-    .then((data) => setPosts(data));
+    let mounted = true;
+    getAllPosts()
+    .then(data => {
+    if(mounted) {
+      setPosts(data);
+    }
+    });
+    return () => mounted = false;
   }, []);
 
-  function createPosts(post){
+  function createPost(post) {
     return (
       <Post
         key={post.id}
@@ -27,7 +33,7 @@ function Home() {
   return (
     <div>
       <hr className="my-4" />
-      {!posts ? "Loading..." : posts.map(createPosts)}
+      {!posts ? "Loading..." : posts.map(createPost)}
     </div>
   );
 }

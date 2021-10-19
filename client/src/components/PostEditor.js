@@ -1,12 +1,13 @@
 //jshint esversion: 6
+//TODO: do not allow empty title or content to be saved!
 
 import React from "react";
+import { savePost } from "../services/PostServices";
 
-function ComposePost() {
+function PostEditor() {
 
   const [postTitle, setPostTitle] = React.useState("");
   const [postContent, setPostContent] = React.useState("");
-  const [result, setResult] = React.useState("");
 
   function handlePostTitleChange(event) {
     setPostTitle(event.target.value);
@@ -19,19 +20,13 @@ function ComposePost() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    fetch("/savepost", {
-      method: "POST",
-      headers: {"Content-type": "application/json"},
-      body: JSON.stringify({ title: postTitle, content: postContent }),
-    })
-    .then((res) => res.json())
-    .then((result) => setResult(result.message))
-    .catch((err) => console.log(err));
+    let post = { title: postTitle, content: postContent };
 
-    console.log(result);
-
-    setPostTitle("");
-    setPostContent("");
+    savePost(post)
+    .then((res) => {
+      setPostTitle("");
+      setPostContent("");
+    });
   }
 
   return (
@@ -51,4 +46,4 @@ function ComposePost() {
   );
 }
 
-export default ComposePost;
+export default PostEditor;

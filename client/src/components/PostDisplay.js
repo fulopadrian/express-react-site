@@ -3,16 +3,22 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import Post from "./Post.js";
+import { getPost } from "../services/PostServices";
 
-function SinglePost() {
+function DisplayPost() {
   let { postId } = useParams();
   const [post, setPost] = React.useState();
 
   React.useEffect(function() {
-    fetch("/posts/" + postId)
-    .then((res) => res.json())
-    .then((data) => setPost(data));
-  });
+    let mounted = true;
+    getPost(postId)
+    .then(data => {
+    if(mounted) {
+      setPost(data);
+    }
+    });
+    return () => mounted = false;
+  }, [postId]);
 
   function createPost(post){
     return (
@@ -28,10 +34,9 @@ function SinglePost() {
 
   return (
     <div>
-      <hr className="my-4" />
       {!post ? "Loading..." : createPost(post)}
     </div>
   );
 }
 
-export default SinglePost;
+export default DisplayPost;

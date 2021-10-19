@@ -10,7 +10,7 @@ function Post(props) {
       <NavLink className="nav-link" to={"/posts/" + props.id}><h1 className="display-4">{props.title}</h1></NavLink>
       <p className="lead">{props.truncated ? props.content.substring(0, 200) + "[...]" : props.content}</p>
       <hr className="my-4" />
-      <NavLink className="btn btn-primary" to={"/posts/" + props.id + "/edit"}>Edit</NavLink>
+      {!props.truncated ? <NavLink className="btn btn-primary" to={"/posts/" + props.id + "/edit"}>Edit</NavLink> : null}
     </div>
   );
 }
