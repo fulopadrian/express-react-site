@@ -15,6 +15,7 @@ function Main() {
       <Route exact path="/" component={Home}></Route>
       <Route exact path="/posts" component={Home}></Route>
       <Route exact path="/posts/:postId" component={PostDisplay}></Route>
+      <Route exact path="/posts/:postId/edit" component={PostEditor}></Route>
       <Route exact path="/compose" component={PostEditor}></Route>
       <Route exact path="/about" component={About}></Route>
       <Route exact path="/contact" component={Contact}></Route>

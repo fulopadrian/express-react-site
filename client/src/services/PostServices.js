@@ -20,3 +20,13 @@ export function savePost(post) {
   .then((res) => res.json())
   .catch((err) => console.log(err));
 }
+
+export function updatePost(post) {
+  return fetch("/updatepost", {
+    method: "POST",
+    headers: {"Content-type": "application/json"},
+    body: JSON.stringify(post),
+  })
+  .then((res) => res.json())
+  .catch((err) => console.log(err));
+}

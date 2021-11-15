@@ -77,7 +77,23 @@ app.post("/savepost", function(req, res) {
 
   posts.push(newPost);
 
-  res.json({ message: "RECEIVED"});
+  res.json({ message: "POST SAVED" });
+});
+
+app.post("/updatepost", function(req, res) {
+  let postId = req.body.id;
+  let postTitle = req.body.title;
+  let postContent = req.body.content;
+
+  let post = posts.find(post => post.id === parseInt(postId, 10));
+  if (post) {
+    post.title = postTitle;
+    post.content = postContent;
+  } else {
+    res.json({ message: "ERROR: POST DOES NOT EXISTS"});
+  }
+
+  res.json({ message: "POST UPDATED" });
 });
 
 /*SERVER STARTING*/

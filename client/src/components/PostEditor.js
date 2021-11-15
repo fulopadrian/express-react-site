@@ -2,12 +2,32 @@
 //TODO: do not allow empty title or content to be saved!
 
 import React from "react";
-import { savePost } from "../services/PostServices";
+import { useParams } from "react-router-dom";
+import { savePost, updatePost, getPost } from "../services/PostServices";
 
 function PostEditor() {
+  let { postId } = useParams();
 
   const [postTitle, setPostTitle] = React.useState("");
   const [postContent, setPostContent] = React.useState("");
+
+  React.useEffect(function() {
+    let mounted = true;
+
+    if (postId !== undefined) {
+      getPost(postId)
+      .then(data => {
+        if(mounted) {
+          setPostTitle(data.title);
+          setPostContent(data.content);
+        }
+      });
+    } else {
+      setPostTitle("");
+      setPostContent("");
+    }
+    return () => mounted = false;
+  }, [postId]);
 
   function handlePostTitleChange(event) {
     setPostTitle(event.target.value);
@@ -20,13 +40,25 @@ function PostEditor() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    let post = { title: postTitle, content: postContent };
+    let post = {
+      id: !postId ? null : postId,
+      title: postTitle,
+      content: postContent
+    };
 
-    savePost(post)
-    .then((res) => {
-      setPostTitle("");
-      setPostContent("");
-    });
+    if (postId !== undefined) {
+      updatePost(post)
+      .then((res) => {
+        console.log(res.message);
+      });
+    } else {
+      savePost(post)
+      .then((res) => {
+        console.log(res.message);
+        setPostTitle("");
+        setPostContent("");
+      });
+    }
   }
 
   return (
